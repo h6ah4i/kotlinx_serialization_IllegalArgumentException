@@ -25,10 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun handleJson() {
-        val json = Json {
-            coerceInputValues = true
-            ignoreUnknownKeys = true
-        }
         val someJson = "{\"id\":\"1\"},"
         val resultString = "[" + someJson.repeat(1490).removeSuffix(",") + "]"
         // 16391 bytes, more than 16384 (2^15),
@@ -36,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         val stream = ByteArrayInputStream(byteArray)
         // throws java.lang.IllegalArgumentException: Bad position on Api level 23  if stream more than 16384 bytes
         // but works on 24+ with any stream sizes
-        val parsedResponse = json.decodeFromStream<List<SomeDto>>(stream)
+        val parsedResponse = Json.decodeFromStream<List<SomeDto>>(stream)
         val textView: TextView = findViewById(R.id.text_view)
         textView.text = parsedResponse.firstOrNull()?.id
 
