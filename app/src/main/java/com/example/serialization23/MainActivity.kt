@@ -9,6 +9,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.ByteArrayInputStream
+@Serializable
+data class SomeDto(
+    @SerialName("id")
+    val id: String
+)
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,12 +21,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         handleJson()
     }
-
-    @Serializable
-    data class SomeDto(
-        @SerialName("id")
-        val id: String
-    )
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun handleJson() {
@@ -35,6 +34,5 @@ class MainActivity : AppCompatActivity() {
         val parsedResponse = Json.decodeFromStream<List<SomeDto>>(stream)
         val textView: TextView = findViewById(R.id.text_view)
         textView.text = parsedResponse.firstOrNull()?.id
-
     }
 }
