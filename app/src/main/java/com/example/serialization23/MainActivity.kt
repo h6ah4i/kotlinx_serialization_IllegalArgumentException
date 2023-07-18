@@ -8,6 +8,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.okio.decodeFromBufferedSource
+import okio.buffer
+import okio.source
 import java.io.ByteArrayInputStream
 @Serializable
 data class SomeDto(
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val stream = ByteArrayInputStream(byteArray)
         // throws java.lang.IllegalArgumentException: Bad position on Api level 23  if stream more than 16384 bytes
         // but works on 24+ with any stream sizes
-        val parsedResponse = Json.decodeFromStream<List<SomeDto>>(stream)
+        val parsedResponse = Json.decodeFromBufferedSource<List<SomeDto>>(stream.source().buffer())
         val textView: TextView = findViewById(R.id.text_view)
         textView.text = parsedResponse.firstOrNull()?.id
     }
